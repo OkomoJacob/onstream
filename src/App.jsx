@@ -1,12 +1,17 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
 
 const Card = ({ title }) => {
   const [isLiked, setIsLiked] = useState(false);
+  useEffect(() => {
+    console.log(`${title} has been like: ${isLiked}`);
+  });
   return (
     <div className="card">
       <h2>{title}</h2>
-      <button onClick={() => setIsLiked(true)}>Like</button>
+      <button onClick={() => setIsLiked(!isLiked)}>
+        {isLiked ? "❤️" : "🤍"}
+      </button>
     </div>
   );
 };
