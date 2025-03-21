@@ -1,0 +1,33 @@
+services:
+  # Developement Service
+  onstream-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+      
+    volumes:
+      - ./src:/app/src
+      - ./public:/app/public
+      - ./package.json:/app/package.json
+      - /app/node_modules
+      
+    ports:
+      - "3001:3000"
+      
+    environment:
+      - NODE_ENV=developement
+      
+   # Producton Service
+  onstream-prod:
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    
+    # No need to set-up volumes in producton since nginx handles that.
+    
+    # Expose port 80 into a new 8080
+    ports:
+      - "8080:80"
+      
+    environment:
+      - NODE_ENV=production

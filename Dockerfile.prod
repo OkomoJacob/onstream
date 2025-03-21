@@ -1,0 +1,24 @@
+# Set up multistage build
+FROM node:22-alpine as build
+
+# Setup the working directory in th container
+WORKDIR /app
+
+# Copy the Packages content & install them in the container
+COPY package*.json ./
+RUN npm install
+
+# Copy all the content of the loacl drectory to the working directory.
+COPY . .
+
+# Build the application in Prod
+RUN npm run build
+
+# Productoin Stage to serve our static files
+FROM nginx:alpine
+
+# Copy the build output to replace with the default nginx contents
+COPY --from=build /app/build /usr/share/nginx/html
+
+# Start Nginx server in production mode
+CMD ["nginx", "-g", "daemon off;"]
