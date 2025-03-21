@@ -1,9 +1,12 @@
+import { useState } from "react";
 import "./App.css";
 
 const Card = ({ title }) => {
+  const [isLiked, setIsLiked] = useState(false);
   return (
     <div className="card">
       <h2>{title}</h2>
+      <button onClick={() => setIsLiked(true)}>Like</button>
     </div>
   );
 };
