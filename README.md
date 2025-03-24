@@ -27,10 +27,9 @@
 
 ## <a name="introduction">🤖 Introduction</a>
 
-Built with React.js 19 for the user interface, Appwrite for the Trending Movies Algorithm, and styled with TailwindCSS, onStream is a WebApp project to help me review my ReactJS skills, after 3 years of absinance from this awesome Library. 
+Built with React.js 19 for the user interface, Appwrite for the Trending Movies Algorithm, and styled with TailwindCSS, onStream is a WebApp project to help me review my ReactJS skills, after 3 years of absinance from this awesome Library.
 
 The platform offers, guided by [JavaScript Mastery](https://www.youtube.com/watch?v=dCLhUialKPQ&t=3750s) a sleek and modern experience for browsing and discovering movies.
-
 
 ## <a name="tech-stack">⚙️ Tech Stack</a>
 
@@ -275,6 +274,56 @@ Open [http://localhost:5173](http://localhost:5173) in your browser to view the 
 
 ## <a name="snippets">🕸️ React Snippets</a>
 
+### GET /snippets
+
+- The header variables to make the API calls.
+
+```javascript
+const API_BASE_URL = "https://api.themoviedb.org/3";
+const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
+const API_OPTIONS = {
+  method: "GET",
+  headers: {
+    accept: "application/json",
+    Authorization: `Bearer ${API_KEY}`,
+  },
+};
+```
+
+#### Explaining the fetchMovies Function:
+
+- `fetchMovies function`: An async function that fetches movie data from the TMDb API. It sets the loading status to true, clears the error message, and makes a GET request to the TMDb API endpoint. 
+- The response is then parsed as JSON and the movie list is updated with the results array. 
+- If an error occurs during the fetch or the API response indicates an error, the error message is updated accordingly. 
+- Finally, the loading status is set to false.
+
+```javascript
+const fetchMovies = async () => {
+  setIsLoading(true);
+  setErrorMsg("");
+
+  try {
+    const endpoint = `${API_BASE_URL}/discover/movie?sort_by=popularity.desc`;
+    const response = await fetch(endpoint, API_OPTIONS);
+    const data = await response.json();
+    setMovieList(data.results || []);
+    console.log("Got Movies ==>:", data);
+
+    if (data.response === "False") {
+      setErrorMsg(data.Error || "Failed to fetch movies.");
+      setMovieList([]);
+      return;
+    }
+  } catch (error) {
+    console.log(`Error fetching movies: ${error}`);
+    setErrorMsg("Error fetching movies. Please try again later.");
+  } finally {
+    setIsLoading(false);
+  }
+};
+```
+
+`useEffect` hook: The `useEffect hook` is used to fetch movie data when the component mounts. The fetchMovies function is called inside the effect.
 
 ## <a name="links">🔗 Assets</a>
 
