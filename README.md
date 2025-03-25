@@ -206,6 +206,41 @@ const fetchMovies = async () => {
 
 `useEffect` hook: The `useEffect hook` is used to fetch movie data when the component mounts. The fetchMovies function is called inside the effect.
 
+## Update Search Movies to Createa a Trending list of movies.
+
+- This function is responsible for updating the search count in an Appwrite database collection. 
+- It ensures that the search count in the Appwrite database is updated correctly, either by incrementing the existing count or creating a new document if the search term does not exist.
+- 
+```javascript
+export const updateSearchCount = async (searchTerm, movie) => {
+  // 1. Use Appwrite SDK to check if the searchTerm exists in the database
+  try {
+    const result = await database.listDocuments(DATABASE_ID, COLLECTION_ID, [
+      Query.equal("searchTerm", searchTerm),
+    ]);
+    // 2. If it does exist, update the count.
+    if (result.documents.length > 0) {
+      const doc = result.documents[0];
+      await database.updateDocument(DATABASE_ID, COLLECTION_ID, doc.$id, {
+        count: doc.count + 1,
+      });
+    }
+
+    // 3. If it doesn't exist, create a new documnet with the search & count as 1
+    else {
+      await database.createDocument(DATABASE_ID, COLLECTION_ID, ID.unique(), {
+        searchTerm,
+        count: 1,
+        movie_id: movie.id,
+        poster_url: `https://image.tmdb.org/t/p/1500${movie.poster_path}`,
+      });
+    }
+  } catch (error) {
+    //
+  }
+
+```
+
 ## <a name="links">🔗 Resources | Assets</a>
 
 1. [The Movie Database](https://developer.themoviedb.org/reference/keyword-movies)
